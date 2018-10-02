@@ -3,7 +3,7 @@
 
 
 #include <QMainWindow>
-#include"xmlwriter.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -52,7 +52,10 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_clicked();
+
 private:
+   int m_nMoney_from_all_day=0;
    int m_pay_all=0;
    int m_to_pay_fuel=0;
    int m_to_pay_fast_food=0;

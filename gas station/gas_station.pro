@@ -28,9 +28,7 @@ SOURCES += \
         mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h \
-    xmlwriter.h \
-    xmlreader.h
+        mainwindow.h
 
 FORMS += \
         mainwindow.ui

@@ -7,9 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     QValidator *m_validator = new QIntValidator(1, 50, this);
-QValidator *m_validator1 = new QIntValidator(1, 5000, this);
+    QValidator *m_validator1 = new QIntValidator(1, 5000, this);
+
     ui->lineEdit->setValidator(m_validator);
-     ui->lineEdit_2->setValidator(m_validator1);
+    ui->lineEdit_2->setValidator(m_validator1);
+    ui->lineEdit_3->setValidator(m_validator1);
+    ui->lineEdit_8->setValidator(m_validator1);
+    ui->lineEdit_9->setValidator(m_validator1);
+    ui->lineEdit_10->setValidator(m_validator1);
 
 }
 
@@ -151,7 +156,7 @@ void MainWindow::calculate()
     {
         m_to_pay_fast_food+=m_to_pay_fast_potato;
     }
-    if(ui->checkBox_3->isChecked())
+    if(ui->checkBox_4->isChecked())
     {
         m_to_pay_fast_food+=m_to_pay_fast_water;
     }
@@ -163,10 +168,28 @@ void MainWindow::calculate()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    m_nMoney_from_all_day+=ui->lcdNumber_4->value();
     QVariant varValue(m_pay_all);
-     QString strValue(varValue.toString());
+    QString strValue(varValue.toString());
 
-xmlwriter q(strValue);
 
+
+
+    ui->lineEdit->setText("");
+    ui->lineEdit_2->setText("");
+    ui->lineEdit_3->setText("");
+    ui->lineEdit_8->setText("");
+    ui->lineEdit_9->setText("");
+    ui->lineEdit_10->setText("");
+
+    ui->checkBox->setChecked(false);
+    ui->checkBox_2->setChecked(false);
+    ui->checkBox_3->setChecked(false);
+    ui->checkBox_4->setChecked(false);
+
+}
+
+void MainWindow::on_pushButton_clicked()
+{
 
 }

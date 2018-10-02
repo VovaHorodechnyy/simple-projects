@@ -1704,7 +1704,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Кінець дня</string>
+      <string>End day</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_2">
@@ -1717,7 +1717,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Оплатити</string>
+      <string>pay</string>
      </property>
     </widget>
    </widget>
