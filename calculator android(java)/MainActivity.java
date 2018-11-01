@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         m_pDisplay = (EditText)findViewById(R.id.display);
-        m_sPendingAdditiveOperator= new String();
-        m_sPendingMultiplicativeOperator= new String();
+        m_sPendingAdditiveOperator =  new String();
+        m_sPendingMultiplicativeOperator = new String();
         m_dblSumInMemory = 0.0;
         m_dblSumSoFar = 0.0;
         m_dblFactorSoFar = 0.0;
