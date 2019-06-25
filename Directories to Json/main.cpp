@@ -21,28 +21,28 @@ int main(int argc, char *argv[])
 
 
     std::cout << "Please use only \'/\' instead of \'\\\'"<<std::endl;
-    QJsonObject json; // обєкт джсн я заповнюю його на 159 рядку
-    QJsonArray arrayFiles; // не використовуэться
-    QList<QString>listAllDir; // список в якому будуть всі директорії , починаючи від початкової яку вводить користувач до самої наглибшої
+    QJsonObject json;
+    QJsonArray arrayFiles;
+    QList<QString>listAllDir;
     ////////////////////////////
     QTextStream s(stdin);
-    QString sPath = s.readLine(); //отримую директорію яку сканити
+    QString sPath = s.readLine();
     /////////////////////////////
 
-    QDirIterator it(sPath,QDir::Dirs ,QDirIterator::Subdirectories); // ітератор який рекрсивно дістає всі під папки
+    QDirIterator it(sPath,QDir::Dirs ,QDirIterator::Subdirectories);
 
     /////////////////////////////////////////////////
-    auto get_files_json_for_path = [&](QString & path) // лямбда алк можна вважати що це фун-ція , щоб вернути масив файлів по шляху
+    auto get_files_json_for_path = [&](QString & path)
     {   QJsonArray array;
         QDirIterator iterator(path);
         while(iterator.hasNext())
         {
-            QFileInfo info(iterator.next());///дозволяє витянути інфу про файл
+            QFileInfo info(iterator.next());
             if(info.isFile())
             {
                 QJsonObject file;
                 file["Name"] = info.baseName();
-                file["Size"] = QString::number(info.size()) + " B";//QString::number() це як + B C# , але на qt не можна int + string
+                file["Size"] = QString::number(info.size()) + " B";
                 file["Path"] = info.path();
                 array.push_back(file);
             }
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         QFileInfo info(it.next());
         if(info.isDir())
         {
-            ///// починаючи з qt 5.2 QDirIterator і QDir .Зустрічаються шлях типу D:/Core/. або D:/Core/.. я видаляю ці крапки
+
             QString tmp = it.next();
             QString path = tmp;
             if(tmp[tmp.size()-1]== '.')
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
                 int nLastSymbol = tmp.lastIndexOf('/');
                  path = tmp.remove(nLastSymbol,tmp.size() - nLastSymbol);
             }
-            /////
+
             if(!listAllDir.contains(path))
             listAllDir.push_back(path);
 
@@ -78,18 +78,18 @@ int main(int argc, char *argv[])
 
     auto begin = listAllDir.begin(),end = listAllDir.end();
 
-    QMap<QString,QJsonObject>mapObjs; // для кожної папки буде свій json object .На 2019 рік qt не дозволяэ змінювати масив який в обєкті json
+    QMap<QString,QJsonObject>mapObjs;
     foreach (auto str, listAllDir)
     {
-        // str - це шлях до папки
+
         QJsonObject obj;
         mapObjs[str] = obj;
-        // оператор[] в QMap не має перевірки чи цей ключ вже існуэ .Тому відбудеться або зміна значення за ключе або створення цього ключа
+
     }
 
     for (int ix = listAllDir.size()-1;begin!=end;++begin)
     {
-       // проходжусь по всім папкам ,і витягаю дані і файли ,які в них є
+
        QFileInfo info(*begin);
        mapObjs[*begin]["Name"] = info.baseName();
        mapObjs[*begin]["DateCreated"] = info.birthTime().toString();
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     }
 
-    auto is_subdir = [](QString dir,QString subdir) // ще одна лямбда, яка перевіряє чи ця папка є дочерня до батька
+    auto is_subdir = [](QString dir,QString subdir)
     {
         int pos = subdir.lastIndexOf('/');
         auto tmp = subdir.remove(pos,subdir.size()-pos);
@@ -107,9 +107,7 @@ int main(int argc, char *argv[])
         return false;
     };
 
-    QMultiMap<QString,QString>multimapSubdirs; // ця колекція є для того ,щоб зберігати дочерні папки до дочерніх
-                                                // ключ D:\avz4
-                                                // значення D:\avz4\Base  і D:\avz4\LOG
+    QMultiMap<QString,QString>multimapSubdirs;
     QString dir = *listAllDir.begin();
     auto listBegin = listAllDir.begin(),listEnd = listAllDir.end();
     ++listBegin; //
@@ -144,7 +142,7 @@ int main(int argc, char *argv[])
 
 
 
-    QList<QString>listFolders; // список в якому э всі(батьки) папки
+    QList<QString>listFolders;
 
     auto multimapBegin = multimapSubdirs.begin() , multimapEnd = multimapSubdirs.end() ;
     auto listAllFolders = multimapSubdirs.keys();
@@ -153,25 +151,23 @@ int main(int argc, char *argv[])
         if(!listFolders.contains(fld))
             listFolders.push_front(fld);
     }
-    std::reverse(listAllFolders.begin(),listAllFolders.end()); // роблю реверс ,щоб в подальшому не використовувати рекурсію, Скоріш за все через це в файлі спочатку йдуть діти , файли , час створення , імя
+    std::reverse(listAllFolders.begin(),listAllFolders.end());
     for (auto fld : listAllFolders)
     {
         auto listSubdirs = multimapSubdirs.values(fld);
 
         QJsonArray array;
         for(int i=0;i<array.count();i++) {
-            array.removeAt(i); // QJsonArray не має методу який видаляє всі елементи
+            array.removeAt(i);
         }
         for (auto fld : listSubdirs)
         {
             array.push_back(mapObjs[fld]);
         }
-        mapObjs[fld]["Children"] = array; // fld це папка в яку добавляю масив папок
-        json = mapObjs[fld]; // в результаті це буде початкова папка
+        mapObjs[fld]["Children"] = array;
+        json = mapObjs[fld];
     }
 
-   // auto correctPath = sPath.re
-   // json = mapObjs.value();
 
 
 
@@ -186,7 +182,8 @@ int main(int argc, char *argv[])
 
 
 
-    //запис файла
+
+
     QFile saveFile(
            QStringLiteral("save.json")
           );
